@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apple Products Showcase</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <header>
+    <nav class="navbar">
+      <h1>Apple Store</h1>
+      <ul>
+        <li><a href="#products">Products</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h2>Discover the Latest Apple Devices</h2>
+    <p>Innovation meets elegance. Browse our top products.</p>
+    <a href="#products" class="btn">Shop Now</a>
+  </section>
+
+  <!-- Filters -->
+  <section class="filters">
+    <form method="GET" action="">
+      <input type="text" name="search" placeholder="Search products...">
+      <select name="category">
+        <option value="All">All Categories</option>
+        <option value="Phones">Phones</option>
+        <option value="Laptops">Laptops</option>
+        <option value="Wearables">Wearables</option>
+      </select>
+      <select name="sort">
+        <option value="Name">Sort by Name</option>
+        <option value="Price">Sort by Price</option>
+      </select>
+      <button type="submit">Apply</button>
+    </form>
+  </section>
+
+  <!-- Product Grid -->
+  <section class="products" id="products">
+    <?php
+    $products = [
+      ["name" => "iPhone 15 Pro", "image" => "iphone15.jpg", "description" => "Titanium. So Pro.", "price" => 999, "video" => "iphone15.mp4"],
+      ["name" => "MacBook Pro M3", "image" => "macbook.jpg", "description" => "Supercharged with M3.", "price" => 1999, "video" => "macbook.mp4"],
+      ["name" => "Apple Watch Series 9", "image" => "watch.jpg", "description" => "Smarter. Brighter.", "price" => 399, "video" => "watch.mp4"]
+    ];
+
+    $search = $_GET['search'] ?? '';
+    $category = $_GET['category'] ?? 'All';
+    $sort = $_GET['sort'] ?? 'Name';
+
+    // Filter
+    $filtered = array_filter($products, function ($product) use ($search) {
+      return stripos($product['name'], $search) !== false;
+    });
+
+    // Sort
+    usort($filtered, function ($a, $b) use ($sort) {
+      return $sort === 'Price' ? $a['price'] <=> $b['price'] : strcmp($a['name'], $b['name']);
+    });
+
+    foreach ($filtered as $product): ?>
+      <div class="product-card">
+        <img src="images/<?php echo $product['image']; ?>" alt="<?php echo $product['name']; ?>">
+        <h3><?php echo $product['name']; ?></h3>
+        <p><?php echo $product['description']; ?></p>
+        <video controls src="videos/<?php echo $product['video']; ?>"></video>
+        <p><strong>$<?php echo $product['price']; ?></strong></p>
+        <button class="btn">Buy Now</button>
+      </div>
+    <?php endforeach; ?>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 Apple Store Clone. All rights reserved.</p>
+  </footer>
+</body>
+</html>
